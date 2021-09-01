@@ -21,7 +21,8 @@ os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 def get_all_flower_names():
-    with open('/kaggle/input/pytorch-challange-flower-dataset/cat_to_name.json', 'r') as f:
+    # with open('./data/cat_to_name.json', 'r') as f:
+    with open('kaggle/input/pytorch-challange-flower-dataset/cat_to_name.json', 'r') as f:
             cat_to_name = json.load(f)
     return cat_to_name
 
@@ -123,7 +124,7 @@ def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler,
     for ep in tqdm(range(epoch)):
         if epoch == 5:
             net.unfreeze()
-            step_lr = getstep_lr(base_lr=lr/100, max_lr=lr, step=6)
+            step_lr = getsteplr(base_lr=lr/100, max_lr=lr, step=6)
             optimizer = optim.SGD(
                 [
                     {'params': net.resnet.conv1.parameters()},
@@ -134,8 +135,8 @@ def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler,
                     {'params': net.resnet.layer2.parameters(), 'lr':step_lr[2]},
                     {'params': net.resnet.layer3.parameters(), 'lr':step_lr[3]},
                     {'params': net.resnet.layer4.parameters(), 'lr':step_lr[4]},
-                    {'params': net.resnet.avgpool.parameters(), 'lr':step_lr[4]},
-                    {'params': net.resnet.fc.parameters(), 'lr': step_lr[4]}
+                    {'params': net.resnet.avgpool.parameters(), 'lr':step_lr[5]},
+                    {'params': net.resnet.fc.parameters(), 'lr': step_lr[6]}
                 ],
                 lr=step_lr[0])
         train_batch(ep, tloader, net, criterion, optimizer, log_freq=log_freq)
