@@ -50,7 +50,7 @@ def train_batch(epoch, dataloader, net, criterion, optimizer, log_freq=2000):
     net.train()
 
     end = time.time()  
-    for i, data in tqdm(enumerate(dataloader, 0)):
+    for i, data in enumerate(dataloader, 0):
         data_time.update(time.time() - end)
 
         inputs, labels = data
@@ -92,7 +92,7 @@ def valid_batch(dataloader, net, criterion, log_freq=2000):
 
     with torch.no_grad():
         end = time.time()
-        for i, data in tqdm(enumerate(dataloader, 0)):
+        for i, data in enumerate(dataloader, 0):
             inputs, labels = data
             inputs, labels = inputs.to(device), labels.to(device)
             
@@ -118,13 +118,14 @@ def valid_batch(dataloader, net, criterion, log_freq=2000):
 
 
 
-def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler, bsize, lr, trainset, log_freq=2000,):
+def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler, bsize, lr, trainset, log_freq=2000):
     global best_acc1
-    print('test')
-    for ep in tqdm(range(epoch)):
+    # print('test')
+    for ep in range(epoch):
         if epoch == 5:
             net.unfreeze()
             step_lr = getsteplr(base_lr=lr/100, max_lr=lr, step=6)
+            print(step_lr)
             optimizer = optim.SGD(
                 [
                     {'params': net.resnet.conv1.parameters()},

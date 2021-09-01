@@ -47,9 +47,9 @@ if __name__ == "__main__":
     NET = args.net
     if NET == 'res':
         NET = ResidualFlowerNetwork(resnet, 102)
+    NET.freeze()
     if torch.cuda.is_available():
         NET.to(device)
-    NET.freeze()
     
     criterion = nn.CrossEntropyLoss()
 
