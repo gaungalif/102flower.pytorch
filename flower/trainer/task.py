@@ -1,12 +1,18 @@
-import os
+import os, sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
 import time
-from typing import Tuple
+import json
+
+
 
 import torch
+import torch.optim as optim
 from torch.functional import Tensor
-import torch.optim
+from metrics import metrics
 from tqdm.notebook import tqdm 
-from flower.metrics.metrics import *
+
 from progress import ProgressMeter 
 
 
@@ -14,14 +20,27 @@ os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
+def get_all_flower_names():
+    with open('data/cat_to_name.json', 'r') as f:
+            cat_to_name = json.load(f)
+    return cat_to_name
+
+def flower_name(val, array_index=False):
+    labels = get_all_flower_names()
+    if array_index:
+        val = val + 1
+    return labels[str(val)]
+
+FLOWER_LABELS = get_all_flower_names()
+
 best_acc1 = 0
 
 def train_batch(epoch, dataloader, net, criterion, optimizer, log_freq=2000):
-    batch_time = AverageMeter('Time', ':6.3f')
-    data_time = AverageMeter('Data', ':6.3f')
-    losses = AverageMeter('Loss', ':.4e')
-    top1 = AverageMeter('Acc@1', ':6.2f')
-    top5 = AverageMeter('Acc@5', ':6.2f')
+    batch_time = metrics.AverageMeter('Time', ':6.3f')
+    data_time = metrics.AverageMeter('Data', ':6.3f')
+    losses = metrics.AverageMeter('Loss', ':.4e')
+    top1 = metrics.AverageMeter('Acc@1', ':6.2f')
+    top5 = metrics.AverageMeter('Acc@5', ':6.2f')
     progress = ProgressMeter(
         len(dataloader),
         [batch_time, data_time, losses, top1, top5],
@@ -30,17 +49,15 @@ def train_batch(epoch, dataloader, net, criterion, optimizer, log_freq=2000):
     net.train()
 
     end = time.time()  
-
     for i, data in tqdm(enumerate(dataloader, 0)):
         data_time.update(time.time() - end)
 
         inputs, labels = data
         inputs, labels = inputs.to(device), labels.to(device)
         output = net(inputs)
-        output = torch.softmax(output, dim=1)
-        loss = criterion(output,labels)
+        loss = criterion(output, labels)
 
-        acc1, acc5 = AccuracyTopK(topk=(1,5))(output=output, target=labels)
+        acc1, acc5 = metrics.AccuracyTopK(topk=(1,5))(output=output, target=labels)
         losses.update(loss.item(), inputs.size(0))
         top1.update(acc1[0], inputs.size(0))
         top5.update(acc5[0], inputs.size(0))
@@ -61,17 +78,17 @@ def train_batch(epoch, dataloader, net, criterion, optimizer, log_freq=2000):
     return top1.avg
             
 def valid_batch(dataloader, net, criterion, log_freq=2000):
-    batch_time = AverageMeter('Time', ':6.3f')
-    losses = AverageMeter('Loss', ':.4e')
-    top1 = AverageMeter('Acc@1', ':6.2f')
-    top5 = AverageMeter('Acc@5', ':6.2f')
+    batch_time = metrics.AverageMeter('Time', ':6.3f')
+    losses = metrics.AverageMeter('Loss', ':.4e')
+    top1 = metrics.AverageMeter('Acc@1', ':6.2f')
+    top5 = metrics.AverageMeter('Acc@5', ':6.2f')
     progress = ProgressMeter(
         len(dataloader),
         [batch_time, losses, top1, top5],
         prefix='Test: ')
 
     net.eval()
-  
+
     with torch.no_grad():
         end = time.time()
         for i, data in tqdm(enumerate(dataloader, 0)):
@@ -79,11 +96,10 @@ def valid_batch(dataloader, net, criterion, log_freq=2000):
             inputs, labels = inputs.to(device), labels.to(device)
             
             output = net(inputs)
-            output = torch.softmax(output, dim=1)
 
             loss = criterion(output,labels)
             
-            acc1, acc5 = AccuracyTopK(topk=(1,5))(output=output, target=labels)
+            acc1, acc5 = metrics.AccuracyTopK(topk=(1,5))(output=output, target=labels)
             losses.update(loss.item(), inputs.size(0))
             top1.update(acc1[0], inputs.size(0))
             top5.update(acc5[0], inputs.size(0))
@@ -100,18 +116,43 @@ def valid_batch(dataloader, net, criterion, log_freq=2000):
     return top1.avg
 
 
-def train_network(epoch, tloader, vloader, net, criterion, optimizer, log_freq=2000):
+
+def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler, bsize, lr, trainset, log_freq=2000,):
     global best_acc1
+    print('test')
     for ep in tqdm(range(epoch)):
+        if epoch == 5:
+            net.unfreeze()
+            step_lr = metrics.getstep_lr(base_lr=0.00005, max_lr=0.005, step=6)
+            optimizer = optim.SGD(
+                [
+                    {'params': net.resnet.conv1.parameters()},
+                    {'params': net.resnet.bn1.parameters()},
+                    {'params': net.resnet.relu.parameters()},
+                    {'params': net.resnet.maxpool.parameters()},
+                    {'params': net.resnet.layer1.parameters(), 'lr':step_lr[1]},
+                    {'params': net.resnet.layer2.parameters(), 'lr':step_lr[2]},
+                    {'params': net.resnet.layer3.parameters(), 'lr':step_lr[3]},
+                    {'params': net.resnet.layer4.parameters(), 'lr':step_lr[4]},
+                    {'params': net.resnet.avgpool.parameters(), 'lr':step_lr[4]},
+                    {'params': net.resnet.fc.parameters(), 'lr': step_lr[4]}
+                ],
+                lr=step_lr[0])
         train_batch(ep, tloader, net, criterion, optimizer, log_freq=log_freq)
         valid_batch(vloader, net, criterion,  log_freq=log_freq)
-        
+        scheduler.step()
         acc1 = valid_batch(vloader, net, criterion, log_freq=log_freq)
         is_best = acc1 > best_acc1
         best_acc1 = max(acc1, best_acc1)
-        SaveCheckpoint(filename='checkpoint.pth.tar')({
-                'epoch': epoch + 1,
-                'state_dict': net.state_dict(),
-                'best_acc1': best_acc1,
-                'optimizer' : optimizer.state_dict(),
-            }, is_best)
+        metrics.SaveCheckpoint({
+            'epoch': epoch + 1,
+            'batch_size': bsize,
+            'learning_rate': lr,
+            'total_clazz': 102,
+            'class_to_idx': trainset.class_to_idx,
+            'labels': FLOWER_LABELS,
+            'arch': 'resnet101',
+            'state_dict': net.state_dict(),
+            'best_acc_topk1': best_acc1,
+            'optimizer' : optimizer.state_dict(),
+        }, is_best)

@@ -1,6 +1,5 @@
-from typing import Tuple
 import torch
-from torch import Tensor
+import numpy as np
 import shutil
 
 def accuracy(output, target, topk=(1,)):
@@ -20,7 +19,21 @@ def accuracy(output, target, topk=(1,)):
             res.append(correct_k.mul_(100.0 / batch_size))
         return res
 
-def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
+def save_checkpoint(state, is_best, filename='checkpoint.pth'):
     torch.save(state, filename)
     if is_best:
-        shutil.copyfile(filename, 'model_best.pth.tar')
+        shutil.copyfile(filename, 'model_best.pth')
+
+def getsteplr(base_lr=0.001, max_lr=0.1, step=4):
+    lr = base_lr
+    hlr = max_lr
+    step = hlr/(step-1)
+    step_lr = np.arange(lr, hlr+step, step).tolist()
+    return step_lr
+getsteplr(base_lr=0.001, step=6)
+
+def adjust_learning_rate(optimizer, epoch, decay, lrate):
+    """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
+    lr = lrate * (0.1 ** (epoch // decay))
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = lr

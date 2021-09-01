@@ -1,5 +1,6 @@
 from .dataset    import FlowerDataset
 
+import torchvision
 import torchvision.transforms as T
 from torch.utils.data import DataLoader
 
@@ -21,12 +22,15 @@ def get_loader(root, jsfile, train=True, batch_size=32, num_worker=8, ro=30, tr=
         T.ToTensor(),
         T.Normalize(mean_val,std_val)
     ])
+
     if train:
-        dset = FlowerDataset(root=root, jsfile=jsfile, transform=train_transforms)
+        dset = torchvision.datasets.ImageFolder(root=root, transform=train_transforms)
+        # dset = FlowerDataset(root=root, jsfile=jsfile, transform=train_transforms)
         loader = DataLoader(dset, batch_size=batch_size, num_workers=num_worker, shuffle=shuffle, drop_last=drop_last)
         print('trainset successfully loaded')
     else:
-        dset = FlowerDataset(root=root, jsfile=jsfile, transform=valid_transforms)
+        dset = torchvision.datasets.ImageFolder(root=root, transform=valid_transforms)
+        # dset = FlowerDataset(root=root, jsfile=jsfile, transform=valid_transforms)
         loader = DataLoader(dset, batch_size=batch_size, num_workers=num_worker, drop_last=drop_last)
         print('validset successfully loaded')
     return loader, dset

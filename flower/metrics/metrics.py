@@ -1,12 +1,14 @@
 import os
 import sys
 import torch
+import shutil
 
 curr_dir = os.getcwd()
 sys.path.append(curr_dir)
 
 import torch
 import flower.metrics.functional as F
+
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
@@ -44,4 +46,20 @@ class SaveCheckpoint(object):
     
     def __call__(self, state, is_best):
         return F.save_checkpoint(state, is_best, self.filename)
+
+class adjust_lr(object):
+    def __init__(self, lrate):
+        self.lrate = lrate
+
+    def __call__(self, optimizer, epoch, decay,):
+        return F.adjust_learning_rate(optimizer, epoch, decay, self.lrate) 
+
+class getstep_lr(object):
+    def __init__(self, base_lr=0.001, max_lr=0.1, step=4):
+        self.base_lr = base_lr
+        self.max_lr = max_lr
+        self.step = step
+    def __call__(self):
+        return F.getsteplr(self.base_lr, self.max_lr, self.step)
+
 
