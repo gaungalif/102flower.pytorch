@@ -1,5 +1,4 @@
 import torch
-import numpy as np
 import shutil
 
 def accuracy(output, target, topk=(1,)):
@@ -24,16 +23,10 @@ def save_checkpoint(state, is_best, filename='checkpoint.pth'):
     if is_best:
         shutil.copyfile(filename, 'model_best.pth')
 
-def getsteplr(base_lr=0.001, max_lr=0.1, step=4):
-    lr = base_lr
-    hlr = max_lr
-    step = hlr/(step-1)
-    step_lr = np.arange(lr, hlr+step, step).tolist()
-    return step_lr
-getsteplr(base_lr=0.001, step=6)
 
 def adjust_learning_rate(optimizer, epoch, decay, lrate):
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
     lr = lrate * (0.1 ** (epoch // decay))
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
+

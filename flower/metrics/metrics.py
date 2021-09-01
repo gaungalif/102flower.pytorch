@@ -7,6 +7,7 @@ curr_dir = os.getcwd()
 sys.path.append(curr_dir)
 
 import torch
+import numpy as np
 import flower.metrics.functional as F
 
 
@@ -58,12 +59,11 @@ class adjust_lr(object):
     def __call__(self):
         return F.adjust_learning_rate(self.optimizer, self.epoch, self.decay, self.lrate) 
 
-class getstep_lr(object):
-    def __init__(self, base_lr=0.001, max_lr=0.1, step=4):
-        self.base_lr = base_lr
-        self.max_lr = max_lr
-        self.step = step
-    def __call__(self):
-        return F.getsteplr(self.base_lr, self.max_lr, self.step)
+def getsteplr(base_lr=0.001, max_lr=0.1, step=4):
+    lr = base_lr
+    hlr = max_lr
+    step = hlr/(step-1)
+    step_lr = np.arange(lr, hlr+step, step).tolist()
+    return step_lr
 
 
