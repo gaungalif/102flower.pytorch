@@ -22,7 +22,7 @@ device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 def get_all_flower_names():
     # with open('./data/cat_to_name.json', 'r') as f:
-    with open('kaggle/input/pytorch-challange-flower-dataset/cat_to_name.json', 'r') as f:
+    with open('../input/pytorch-challange-flower-dataset/cat_to_name.json', 'r') as f:
             cat_to_name = json.load(f)
     return cat_to_name
 
