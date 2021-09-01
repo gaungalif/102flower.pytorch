@@ -15,6 +15,9 @@ from flower.datasets import loader
 from flower.models.residual import ResidualFlowerNetwork
 from flower.trainer import task
 
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-lr','--lrate', type=float, help='learning rate', default=0.005)
@@ -44,6 +47,8 @@ if __name__ == "__main__":
     NET = args.net
     if NET == 'res':
         NET = ResidualFlowerNetwork(resnet, 102)
+    if torch.cuda.is_available():
+        NET.to(device)
     NET.freeze()
     
     criterion = nn.CrossEntropyLoss()
