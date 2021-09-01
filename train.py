@@ -57,8 +57,8 @@ if __name__ == "__main__":
        
     base_dir = Path('../input/pytorch-challange-flower-dataset/')
     cat2name_path = ('cat_to_name.json') 
-    train_path = base_dir.joinpath('train')
-    valid_path = base_dir.joinpath('valid')
+    train_path = base_dir.joinpath('dataset/train')
+    valid_path = base_dir.joinpath('dataset/valid')
 
     train_loader, trainset = loader.train_loader(root=train_path, jsfile=cat2name_path, batch_size=BSIZE, num_worker=NUM_WORKER, ro=RO, tr=TR)
     valid_loader, validset = loader.valid_loader(root=valid_path, jsfile=cat2name_path, batch_size=BSIZE, num_worker=NUM_WORKER, vr=VR)
