@@ -41,11 +41,12 @@ class AccuracyTopK(object):
         return F.accuracy(output, target, self.topk)
 
 class SaveCheckpoint(object):
-    def __init__(self, filename="checkpoint.pth"):
-        self.filename = filename
+    def __init__(self, state, is_best):
+        self.state = state
+        self.is_best = is_best
     
-    def __call__(self, state, is_best):
-        return F.save_checkpoint(state, is_best, self.filename)
+    def __call__(self, filename='checkpoint.pth'):
+        return F.save_checkpoint(self.state, self.is_best, filename)
 
 class adjust_lr(object):
     def __init__(self, lrate):
