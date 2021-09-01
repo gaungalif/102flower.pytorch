@@ -34,12 +34,11 @@ class AverageMeter(object):
         return fmtstr.format(**self.__dict__)
 
 class AccuracyTopK(object):
-    def __init__(self, output, target, topk:tuple=(1,)):
-        self.output = output
-        self.target = target
+    def __init__(self, topk:tuple=(1,)):
         self.topk = topk
-    def __call__(self):
-        return F.accuracy(self.output, self.target, self.topk)
+    
+    def __call__(self, output , target):
+        return F.accuracy(output, target, self.topk)
 
 class SaveCheckpoint(object):
     def __init__(self, state, is_best):
