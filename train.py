@@ -64,4 +64,3 @@ if __name__ == "__main__":
     valid_loader, validset = loader.valid_loader(root=valid_path, jsfile=cat2name_path, batch_size=BSIZE, num_worker=NUM_WORKER, vr=VR)
 
     task.train_network(EPOCHS, train_loader, valid_loader, NET, criterion, OPTIMIZER, scheduler, BSIZE, LR, trainset, LOG_FREQ)  
-
