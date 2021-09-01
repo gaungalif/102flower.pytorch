@@ -10,7 +10,7 @@ import json
 import torch
 import torch.optim as optim
 from torch.functional import Tensor
-from metrics import metrics
+from metrics.metrics import *
 from tqdm.notebook import tqdm 
 
 from progress import ProgressMeter 
@@ -36,11 +36,11 @@ FLOWER_LABELS = get_all_flower_names()
 best_acc1 = 0
 
 def train_batch(epoch, dataloader, net, criterion, optimizer, log_freq=2000):
-    batch_time = metrics.AverageMeter('Time', ':6.3f')
-    data_time = metrics.AverageMeter('Data', ':6.3f')
-    losses = metrics.AverageMeter('Loss', ':.4e')
-    top1 = metrics.AverageMeter('Acc@1', ':6.2f')
-    top5 = metrics.AverageMeter('Acc@5', ':6.2f')
+    batch_time = AverageMeter('Time', ':6.3f')
+    data_time = AverageMeter('Data', ':6.3f')
+    losses = AverageMeter('Loss', ':.4e')
+    top1 = AverageMeter('Acc@1', ':6.2f')
+    top5 = AverageMeter('Acc@5', ':6.2f')
     progress = ProgressMeter(
         len(dataloader),
         [batch_time, data_time, losses, top1, top5],
@@ -57,7 +57,7 @@ def train_batch(epoch, dataloader, net, criterion, optimizer, log_freq=2000):
         output = net(inputs)
         loss = criterion(output, labels)
 
-        acc1, acc5 = metrics.AccuracyTopK(topk=(1,5))(output=output, target=labels)
+        acc1, acc5 = AccuracyTopK(topk=(1,5))(output=output, target=labels)
         losses.update(loss.item(), inputs.size(0))
         top1.update(acc1[0], inputs.size(0))
         top5.update(acc5[0], inputs.size(0))
@@ -78,10 +78,10 @@ def train_batch(epoch, dataloader, net, criterion, optimizer, log_freq=2000):
     return top1.avg
             
 def valid_batch(dataloader, net, criterion, log_freq=2000):
-    batch_time = metrics.AverageMeter('Time', ':6.3f')
-    losses = metrics.AverageMeter('Loss', ':.4e')
-    top1 = metrics.AverageMeter('Acc@1', ':6.2f')
-    top5 = metrics.AverageMeter('Acc@5', ':6.2f')
+    batch_time = AverageMeter('Time', ':6.3f')
+    losses = AverageMeter('Loss', ':.4e')
+    top1 = AverageMeter('Acc@1', ':6.2f')
+    top5 = AverageMeter('Acc@5', ':6.2f')
     progress = ProgressMeter(
         len(dataloader),
         [batch_time, losses, top1, top5],
@@ -99,7 +99,7 @@ def valid_batch(dataloader, net, criterion, log_freq=2000):
 
             loss = criterion(output,labels)
             
-            acc1, acc5 = metrics.AccuracyTopK(topk=(1,5))(output=output, target=labels)
+            acc1, acc5 = AccuracyTopK(topk=(1,5))(output=output, target=labels)
             losses.update(loss.item(), inputs.size(0))
             top1.update(acc1[0], inputs.size(0))
             top5.update(acc5[0], inputs.size(0))
@@ -123,7 +123,7 @@ def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler,
     for ep in tqdm(range(epoch)):
         if epoch == 5:
             net.unfreeze()
-            step_lr = metrics.getstep_lr(base_lr=0.00005, max_lr=0.005, step=6)
+            step_lr = getstep_lr(base_lr=0.00005, max_lr=0.005, step=6)
             optimizer = optim.SGD(
                 [
                     {'params': net.resnet.conv1.parameters()},
@@ -144,7 +144,7 @@ def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler,
         acc1 = valid_batch(vloader, net, criterion, log_freq=log_freq)
         is_best = acc1 > best_acc1
         best_acc1 = max(acc1, best_acc1)
-        metrics.SaveCheckpoint({
+        SaveCheckpoint({
             'epoch': epoch + 1,
             'batch_size': bsize,
             'learning_rate': lr,
