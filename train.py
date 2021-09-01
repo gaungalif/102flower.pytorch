@@ -28,8 +28,8 @@ if __name__ == "__main__":
     parser.add_argument('-n','--num_worker',type=int, help='num worker', default=8)
     parser.add_argument('-o','--optimizer',type=str, help='optimizer', required=True)
     parser.add_argument('--net',type=str, help='net', required=True)
-    parser.add_argument('-tr','--train_resized',type=int, help='train resized', default=64)
-    parser.add_argument('-vr','--valid_resized',type=int, help='valid resized', default=64)
+    parser.add_argument('-tr','--train_resized',type=int, help='train resized', default=224)
+    parser.add_argument('-vr','--valid_resized',type=int, help='valid resized', default=224)
     parser.add_argument('-ro','--train_rotate',type=int, help='train rotate', default=30)
     args = parser.parse_args()
 

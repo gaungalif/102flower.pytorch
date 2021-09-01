@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 
 mean_val, std_val = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 
-def get_loader(root, jsfile, train=True, batch_size=32, num_worker=8, ro=30, tr=64, vr=64, shuffle=True, drop_last=True):
+def get_loader(root, jsfile, train=True, batch_size=32, num_worker=8, ro=30, tr=224, vr=224, shuffle=True, drop_last=True):
     train_transforms = T.Compose([
         T.RandomRotation(ro),
         T.RandomResizedCrop(tr),
