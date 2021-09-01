@@ -123,7 +123,7 @@ def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler,
     for ep in tqdm(range(epoch)):
         if epoch == 5:
             net.unfreeze()
-            step_lr = getstep_lr(base_lr=0.00005, max_lr=0.005, step=6)
+            step_lr = getstep_lr(base_lr=lr/100, max_lr=lr, step=6)
             optimizer = optim.SGD(
                 [
                     {'params': net.resnet.conv1.parameters()},
