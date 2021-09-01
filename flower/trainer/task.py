@@ -135,8 +135,8 @@ def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler,
                     {'params': net.resnet.layer2.parameters(), 'lr':step_lr[2]},
                     {'params': net.resnet.layer3.parameters(), 'lr':step_lr[3]},
                     {'params': net.resnet.layer4.parameters(), 'lr':step_lr[4]},
-                    {'params': net.resnet.avgpool.parameters(), 'lr':step_lr[5]},
-                    {'params': net.resnet.fc.parameters(), 'lr': step_lr[6]}
+                    {'params': net.resnet.avgpool.parameters(), 'lr':step_lr[4]},
+                    {'params': net.resnet.fc.parameters(), 'lr': step_lr[4]}
                 ],
                 lr=step_lr[0])
         train_batch(ep, tloader, net, criterion, optimizer, log_freq=log_freq)
