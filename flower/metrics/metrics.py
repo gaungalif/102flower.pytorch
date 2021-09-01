@@ -34,11 +34,12 @@ class AverageMeter(object):
         return fmtstr.format(**self.__dict__)
 
 class AccuracyTopK(object):
-    def __init__(self, topk:tuple=(1,)):
+    def __init__(self, output, target, topk:tuple=(1,)):
+        self.output = output
+        self.target = target
         self.topk = topk
-    
-    def __call__(self, output , target):
-        return F.accuracy(output, target, self.topk)
+    def __call__(self):
+        return F.accuracy(self.output, self.target, self.topk)
 
 class SaveCheckpoint(object):
     def __init__(self, state, is_best):
@@ -49,11 +50,14 @@ class SaveCheckpoint(object):
         return F.save_checkpoint(self.state, self.is_best, filename)
 
 class adjust_lr(object):
-    def __init__(self, lrate):
+    def __init__(self, optimizer, epoch, decay, lrate):
+        self.optimizer = optimizer
+        self.epoch = epoch
+        self.decay = decay
         self.lrate = lrate
 
-    def __call__(self, optimizer, epoch, decay,):
-        return F.adjust_learning_rate(optimizer, epoch, decay, self.lrate) 
+    def __call__(self):
+        return F.adjust_learning_rate(self.optimizer, self.epoch, self.decay, self.lrate) 
 
 class getstep_lr(object):
     def __init__(self, base_lr=0.001, max_lr=0.1, step=4):
