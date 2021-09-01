@@ -78,6 +78,6 @@ class ResidualFlowerNetwork(nn.Module):
         x = self.resnet(x)
         return x
 
-resnet = torchvision.models.resnet34(pretrained=True)
+# resnet = torchvision.models.resnet34(pretrained=True)
 # print(resnet) 
-model = ResidualFlowerNetwork(resnet, 102)
+# model = ResidualFlowerNetwork(resnet, 102)
