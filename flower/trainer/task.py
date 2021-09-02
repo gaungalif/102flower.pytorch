@@ -129,10 +129,9 @@ def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler,
     global best_acc1
     # print('test')
     for ep in range(epoch):
-        if epoch == 2:
+        if ep == 5:
             net.unfreeze()
             step_lr = getsteplr(base_lr=lr/100, max_lr=lr, step=6)
-            print(step_lr)
             optimizer = optim.SGD(
                 [
                     {'params': net.resnet.conv1.parameters()},
@@ -147,7 +146,6 @@ def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler,
                     {'params': net.resnet.fc.parameters(), 'lr': step_lr[4]}
                 ],
                 lr=step_lr[0])
-        print(optimizer)
         train_batch(ep, tloader, net, criterion, optimizer, log_freq=log_freq)
         valid_batch(vloader, net, criterion,  log_freq=log_freq)
         scheduler.step()
