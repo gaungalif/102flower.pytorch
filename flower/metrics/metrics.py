@@ -49,21 +49,10 @@ class SaveCheckpoint(object):
     def __call__(self, filename='checkpoint.pth'):
         return F.save_checkpoint(self.state, self.is_best, filename)
 
-class adjust_lr(object):
-    def __init__(self, optimizer, epoch, decay, lrate):
-        self.optimizer = optimizer
-        self.epoch = epoch
-        self.decay = decay
-        self.lrate = lrate
-
-    def __call__(self):
-        return F.adjust_learning_rate(self.optimizer, self.epoch, self.decay, self.lrate) 
-
-def getsteplr(base_lr=0.001, max_lr=0.1, step=4):
-    lr = base_lr
-    hlr = max_lr
-    step = hlr/(step-1)
-    step_lr = np.arange(lr, hlr+step, step).tolist()
-    return step_lr
+def adjust_learning_rate(optimizer, epoch, decay, lrate):
+    """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
+    lr = lrate * (0.1 ** (epoch // decay))
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = lr
 
 
