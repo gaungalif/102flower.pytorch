@@ -146,7 +146,7 @@ def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler,
                     {'params': net.resnet.fc.parameters(), 'lr': step_lr[4]}
                 ],
                 lr=step_lr[0])
-                print('test')
+            print('test')
         train_batch(ep, tloader, net, criterion, optimizer, log_freq=log_freq)
         valid_batch(vloader, net, criterion,  log_freq=log_freq)
         scheduler.step()
