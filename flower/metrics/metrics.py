@@ -41,13 +41,10 @@ class AccuracyTopK(object):
     def __call__(self, output , target):
         return F.accuracy(output, target, self.topk)
 
-class SaveCheckpoint(object):
-    def __init__(self, state, is_best):
-        self.state = state
-        self.is_best = is_best
-    
-    def __call__(self, filename='checkpoint.pth'):
-        return F.save_checkpoint(self.state, self.is_best, filename)
+def save_checkpoint(state, is_best, filename='checkpoint.pth'):
+    torch.save(state, filename)
+    if is_best:
+        shutil.copyfile(filename, 'model_best.pth')
 
 def adjust_learning_rate(optimizer, epoch, decay, lrate):
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""

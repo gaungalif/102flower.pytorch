@@ -123,13 +123,14 @@ def valid_batch(dataloader, net, criterion, log_freq=2000):
 
     return top1.avg
 
+np.dot
 
 
 def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler, bsize, lr, trainset, log_freq=2000):
     global best_acc1
     # print('test')
     for ep in range(epoch):
-        if ep == 13:
+        if epoch == 13:
             net.unfreeze()
             step_lr = getsteplr(base_lr=lr/100, max_lr=lr, step=6)
             optimizer = optim.SGD(
@@ -153,7 +154,7 @@ def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler,
         acc1 = valid_batch(vloader, net, criterion, log_freq=log_freq)
         is_best = acc1 > best_acc1
         best_acc1 = max(acc1, best_acc1)
-        SaveCheckpoint({
+        save_checkpoint({
             'epoch': epoch + 1,
             'batch_size': bsize,
             'learning_rate': lr,
