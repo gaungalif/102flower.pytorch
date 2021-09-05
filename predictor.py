@@ -21,20 +21,13 @@ import torchvision.datasets.utils as utils
 import torchvision.transforms as transforms
 
 from flower.models.residual import ResidualFlowerNetwork
-
-DIR = True
-if DIR:
-    path = './dataset/cat_to_name.json'
-else:
-    path = '../input/pytorch-challange-flower-dataset/cat_to_name.json'
     
 curr_dir = Path(curr_dir)
 root = curr_dir.joinpath('102flower.pytorch/weights')
-# utils.download_url('https://drive.google.com/file/d/1c6Dz5QVESdPPAvW0NUWuSnToVkT9fQ3Q/view?usp=sharing', root=root, filename='model_best.pth')
-# utils.download_url('https://drive.google.com/file/d/16doe5f4YTLlGpFR9_0WQtjAvsPMlwxxJ/view?usp=sharing', root=root, filename='checkpoint.pth')
 # device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 def load_flower_network(filename, device):
+    utils.download_url('https://drive.google.com/file/d/1c6Dz5QVESdPPAvW0NUWuSnToVkT9fQ3Q/view?usp=sharing', root=root, filename=root.joinpath(filename))
     if os.path.isfile(filename): 
         checkpoint = torch.load(filename, map_location=device)
         resnet = torchvision.models.resnet34(pretrained=True)
@@ -47,6 +40,7 @@ def load_flower_network(filename, device):
     
 
 def load_checkpoint(filename, device):
+    utils.download_url('https://drive.google.com/file/d/16doe5f4YTLlGpFR9_0WQtjAvsPMlwxxJ/view?usp=sharing', root=root, filename=root.joinpath(filename))
     if os.path.isfile(filename): 
         checkpoint = torch.load(filename, map_location=device)
         return checkpoint
@@ -54,7 +48,7 @@ def load_checkpoint(filename, device):
         return None
 
 def get_all_flower_names():
-    with open(path, 'r') as f:
+    with open('./dataset/cat_to_name.json', 'r') as f:
             cat_to_name = json.load(f)
     return cat_to_name
 
