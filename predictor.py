@@ -2,6 +2,7 @@
 import os
 import sys
 import json
+sys.setrecursionlimit(10000)
 
 curr_dir = os.getcwd()
 sys.path.append(curr_dir)
@@ -21,21 +22,19 @@ import torchvision.transforms as transforms
 
 from flower.models.residual import ResidualFlowerNetwork
 
-DIR = False
+DIR = True
 if DIR:
     path = './dataset/cat_to_name.json'
 else:
     path = '../input/pytorch-challange-flower-dataset/cat_to_name.json'
     
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-
 curr_dir = Path(curr_dir)
-root = curr_dir.joinpath('102flower.pytorch/flower/weights')
+root = curr_dir.joinpath('102flower.pytorch/weights')
 # utils.download_url('https://drive.google.com/file/d/1c6Dz5QVESdPPAvW0NUWuSnToVkT9fQ3Q/view?usp=sharing', root=root, filename='model_best.pth')
 # utils.download_url('https://drive.google.com/file/d/16doe5f4YTLlGpFR9_0WQtjAvsPMlwxxJ/view?usp=sharing', root=root, filename='checkpoint.pth')
+# device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-def load_flower_network(filename):
+def load_flower_network(filename, device):
     if os.path.isfile(filename): 
         checkpoint = torch.load(filename, map_location=device)
         resnet = torchvision.models.resnet34(pretrained=True)
@@ -47,7 +46,7 @@ def load_flower_network(filename):
         return None
     
 
-def load_checkpoint(filename):
+def load_checkpoint(filename, device):
     if os.path.isfile(filename): 
         checkpoint = torch.load(filename, map_location=device)
         return checkpoint
@@ -135,8 +134,7 @@ def view_classify(img_path, label_idx, prob, classes, class_to_idx):
     ax2.barh(np.arange(5), ps)
     ax2.set_aspect(0.2)
     ax2.set_yticks(np.arange(5))
-    
-    
+        
     class_idx, class_name = getFlowerClassIndex(classes, class_to_idx)
     ax2.set_yticklabels(class_name, size='large')
     ax2.set_title('Class Probability')
