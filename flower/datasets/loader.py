@@ -5,13 +5,16 @@ from .dataset    import FlowerDataset
 import torchvision
 import torchvision.transforms as T
 from torch.utils.data import DataLoader
-
+from train import DIR
 
 mean_val, std_val = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 
+if DIR:
+    path = './dataset/cat_to_name.json'
+else:
+    path = '../input/pytorch-challange-flower-dataset/cat_to_name.json'
 def get_all_flower_names():
-    with open('./dataset/cat_to_name.json', 'r') as f:
-    # with open('../input/pytorch-challange-flower-dataset/cat_to_name.json', 'r') as f:
+    with open(path, 'r') as f:
             cat_to_name = json.load(f)
     return cat_to_name
 
