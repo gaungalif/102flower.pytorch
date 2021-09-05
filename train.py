@@ -60,7 +60,8 @@ if __name__ == "__main__":
         print("error cuy")
     scheduler = optim.lr_scheduler.StepLR(OPTIMIZER, step_size=6, gamma=0.1)
        
-    base_dir = Path('../input/pytorch-challange-flower-dataset')
+    # base_dir = Path('../input/pytorch-challange-flower-dataset')
+    base_dir = Path('.')
     cat2name_path = ('cat_to_name.json') 
     train_path = base_dir.joinpath('dataset/train')
     valid_path = base_dir.joinpath('dataset/valid')
