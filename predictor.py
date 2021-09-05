@@ -20,7 +20,12 @@ import torchvision.datasets.utils as utils
 import torchvision.transforms as transforms
 
 from flower.models.residual import ResidualFlowerNetwork
-
+from train import DIR
+if DIR:
+    path = './dataset/cat_to_name.json'
+else:
+    path = '../input/pytorch-challange-flower-dataset/cat_to_name.json'
+    
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
@@ -49,7 +54,7 @@ def load_checkpoint(filename):
         return None
 
 def get_all_flower_names():
-    with open('./dataset/cat_to_name.json', 'r') as f:
+    with open(path, 'r') as f:
             cat_to_name = json.load(f)
     return cat_to_name
 
@@ -132,7 +137,7 @@ def view_classify(img_path, label_idx, prob, classes, class_to_idx):
     
     
     class_idx, class_name = getFlowerClassIndex(classes, class_to_idx)
-    ax2.set_yticklabels(class_name, size='large');
+    ax2.set_yticklabels(class_name, size='large')
     ax2.set_title('Class Probability')
     ax2.set_xlim(0, 1.1)
 
