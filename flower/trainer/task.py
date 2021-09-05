@@ -1,43 +1,24 @@
-import os, sys
+import os
+import sys
+
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
+
 import time
-import json
-
-
 
 import torch
 import torch.optim as optim
 from torch.functional import Tensor
 from metrics.metrics import *
+from datasets.loader import *
 from tqdm.notebook import tqdm 
 
 from progress import ProgressMeter 
 
-
 os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-
-def getsteplr(base_lr=0.001, max_lr=0.1, step=4):
-    lr = base_lr
-    hlr = max_lr
-    step = hlr/(step-1)
-    step_lr = np.arange(lr, hlr+step, step).tolist()
-    return step_lr
-
-def get_all_flower_names():
-    # with open('./data/cat_to_name.json', 'r') as f:
-    with open('../input/pytorch-challange-flower-dataset/cat_to_name.json', 'r') as f:
-            cat_to_name = json.load(f)
-    return cat_to_name
-
-def flower_name(val, array_index=False):
-    labels = get_all_flower_names()
-    if array_index:
-        val = val + 1
-    return labels[str(val)]
 
 FLOWER_LABELS = get_all_flower_names()
 
@@ -57,7 +38,7 @@ def train_batch(epoch, dataloader, net, criterion, optimizer, log_freq=2000):
     net.train()
 
     end = time.time()  
-    for i, data in enumerate(dataloader, 0):
+    for i, data in enumerate(dataloader):
         data_time.update(time.time() - end)
 
         inputs, labels = data
@@ -99,7 +80,7 @@ def valid_batch(dataloader, net, criterion, log_freq=2000):
 
     with torch.no_grad():
         end = time.time()
-        for i, data in enumerate(dataloader, 0):
+        for i, data in enumerate(dataloader):
             inputs, labels = data
             inputs, labels = inputs.to(device), labels.to(device)
             
@@ -123,12 +104,8 @@ def valid_batch(dataloader, net, criterion, log_freq=2000):
 
     return top1.avg
 
-np.dot
-
-
 def train_network(epoch, tloader, vloader, net, criterion, optimizer, scheduler, bsize, lr, trainset, log_freq=2000):
     global best_acc1
-    # print('test')
     for ep in range(epoch):
         if epoch == 13:
             net.unfreeze()
