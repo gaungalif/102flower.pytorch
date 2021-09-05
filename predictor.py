@@ -6,11 +6,10 @@ import json
 curr_dir = os.getcwd()
 sys.path.append(curr_dir)
 
-import PIL.Image
-
-import torchvision.transforms as transforms
-
 import torch
+import torch.nn.functional as F
+
+import PIL.Image
 from pathlib import Path
 
 import numpy as np
@@ -18,6 +17,7 @@ import matplotlib.pyplot as plt
 
 import torchvision
 import torchvision.datasets.utils as utils
+import torchvision.transforms as transforms
 
 from flower.models.residual import ResidualFlowerNetwork
 
@@ -104,3 +104,17 @@ def imshow(image, ax=None, title=None):
     ax.imshow(image)
     
     return ax
+
+def predict(image_path, model, topk=5):
+    ''' Predict the class (or classes) of an image using a trained deep learning model.
+    '''
+    image = process_image(image_path)
+    model.eval()
+    model = model.cpu()
+    with torch.no_grad():
+        output = model.forward(image)
+        output = F.log_softmax(output, dim=1)
+        ps = torch.exp(output)
+        result = ps.topk(topk, dim=1, largest=True, sorted=True)
+        
+    return result
