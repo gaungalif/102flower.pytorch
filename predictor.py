@@ -20,7 +20,8 @@ import torchvision.datasets.utils as utils
 import torchvision.transforms as transforms
 
 from flower.models.residual import ResidualFlowerNetwork
-from train import DIR
+
+DIR = False
 if DIR:
     path = './dataset/cat_to_name.json'
 else:
