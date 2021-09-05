@@ -37,7 +37,7 @@ root = curr_dir.joinpath('102flower.pytorch/flower/weights')
 
 def load_flower_network(filename):
     if os.path.isfile(filename): 
-        checkpoint = torch.load(filename, map_location=device)
+        checkpoint = torch.load(filename, map_location='cuda')
         resnet = torchvision.models.resnet34(pretrained=True)
         clazz = checkpoint['total_clazz']
         model = ResidualFlowerNetwork(resnet, clazz)
