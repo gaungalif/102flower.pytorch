@@ -41,6 +41,13 @@ class AccuracyTopK(object):
     def __call__(self, output , target):
         return F.accuracy(output, target, self.topk)
 
+def getsteplr(base_lr=0.001, max_lr=0.1, step=4):
+    lr = base_lr
+    hlr = max_lr
+    step = hlr/(step-1)
+    step_lr = np.arange(lr, hlr+step, step).tolist()
+    return step_lr
+
 def save_checkpoint(state, is_best, filename='checkpoint.pth'):
     torch.save(state, filename)
     if is_best:
