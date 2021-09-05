@@ -48,9 +48,6 @@ def load_checkpoint(filename):
     else:
         return None
 
-# model = load_flower_network(root.joinpath('model_best.pth'))
-# checkpoint = load_checkpoint(root.joinpath('checkpoint.pth'))
-
 def get_all_flower_names():
     with open('./dataset/cat_to_name.json', 'r') as f:
             cat_to_name = json.load(f)
@@ -118,3 +115,25 @@ def predict(image_path, model, topk=5):
         result = ps.topk(topk, dim=1, largest=True, sorted=True)
         
     return result
+
+def view_classify(img_path, label_idx, prob, classes, class_to_idx):
+    ''' Function for viewing an image and it's predicted classes.
+    '''
+    img = np.asarray(PIL.Image.open(img_path))
+    ps = prob.data.numpy().squeeze().tolist()
+    fig, (ax1, ax2) = plt.subplots(figsize=(10,10), ncols=2)
+    ax1.imshow(img.squeeze())
+    ax1.set_title(flower_name(label_idx))
+    ax1.axis('off')
+    
+    ax2.barh(np.arange(5), ps)
+    ax2.set_aspect(0.2)
+    ax2.set_yticks(np.arange(5))
+    
+    
+    class_idx, class_name = getFlowerClassIndex(classes, class_to_idx)
+    ax2.set_yticklabels(class_name, size='large');
+    ax2.set_title('Class Probability')
+    ax2.set_xlim(0, 1.1)
+
+    plt.tight_layout()
