@@ -10,7 +10,7 @@ from predictor import *
 from pathlib import Path
 base_dir = Path(curr_dir)
 
-def predictors(image_path='dataset/valid/2/image_05094.jpg', weight_path='/home/gaungalif/Workspace/repo/102flower.pytorch/weights/model_best.pth', use_gpu=False):
+def predictors(image_path='dataset/valid/2/image_05094.jpg', weight_path='weights/model_best.pth', use_gpu=False):
 
   device = torch.device('cuda:0' if use_gpu and torch.cuda.is_available() else 'cpu')
 
