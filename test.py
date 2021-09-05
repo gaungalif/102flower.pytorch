@@ -6,7 +6,7 @@ sys.path.append(curr_dir)
 from pathlib import Path
 
 from predictor import *
-base_dir = Path(curr_dir)
+base_dir = Path('../input/pytorch-challange-flower-dataset')
 validset = base_dir.joinpath('dataset/valid')
 image_file = validset.joinpath('2/image_05136.jpg')
 
