@@ -24,6 +24,8 @@ i have also save the package-list.txt into the repository.
 - Use `train.py` to train the model.
 - Change `dataset` path to the appropriate path if needed
 - You can modify the Hyperparameter and Augmentation if needed
+- Use this command 'python train.py --help' for help
+example command: python train.py  --lrate 0.05 --epoch 100 --lfreq 20 --bsize 128 --num_worker 64 
 
 
 ### Test:
