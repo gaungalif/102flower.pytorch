@@ -42,11 +42,17 @@ example command:
 - output result: 
 
 Flower category: hard-leaved pocket orchid
+
 Prediction
+
 Class: hard-leaved pocket orchid , confidence: 99.997%
+
 Class: wild pansy , confidence: 0.001%
+
 Class: moon orchid , confidence: 0.001%
+
 Class: japanese anemone , confidence: 0.000%
+
 Class: lotus lotus , confidence: 0.000%
 
 
