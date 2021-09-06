@@ -13,7 +13,7 @@ i have also save the package-list.txt into the repository.
 
 ## Hardware Requirment:
 - Computer with decend RAM and CPU
-- Nvidia GPU or Jetson Dev Board (Optional)
+- GPU (optional)
 
 ## How to Use:
 ### Dataset:
