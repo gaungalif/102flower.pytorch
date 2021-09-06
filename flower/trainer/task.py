@@ -12,7 +12,6 @@ import torch.optim as optim
 from torch.functional import Tensor
 from metrics.metrics import *
 from datasets.loader import *
-from tqdm.notebook import tqdm 
 
 from progress import ProgressMeter 
 
