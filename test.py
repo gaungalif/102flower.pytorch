@@ -36,7 +36,7 @@ def predictors(image_path='dataset/valid/2/image_05094.jpg', weight_path='weight
   clas.append(str(i))
   print('Prediction')
   for i in a:
-      print('Class: {} , confidence: {}'.format(class_name[int(i)],float(output[:,i]*100)))
+      print('Class: {} , confidence: {:.3%}'.format(class_name[int(i)],float(output[:,i])))
   plt.bar(clas,prediction)
 
 if __name__ == '__main__':
