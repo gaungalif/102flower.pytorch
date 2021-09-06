@@ -15,7 +15,7 @@ def predictors(image_path='dataset/valid/2/image_05094.jpg', weight_path='weight
   device = torch.device('cuda:0' if use_gpu and torch.cuda.is_available() else 'cpu')
 
   images = image_path
-  download = False
+  download = True
   model = load_flower_network(base_dir.joinpath(weight_path), device, download=download)
   probs, classes = predict(images, model)
   print(probs)

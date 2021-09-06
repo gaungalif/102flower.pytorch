@@ -23,7 +23,7 @@ import torchvision.transforms as transforms
 from flower.models.residual import ResidualFlowerNetwork
     
 curr_dir = Path(curr_dir)
-root = curr_dir.joinpath('102flower.pytorch/weights')
+root = curr_dir.joinpath('weights')
 # device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 def load_flower_network(filename, device, download):
