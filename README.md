@@ -38,7 +38,7 @@ example command:
 - the program will predict the class (or classes) of an image using a trained deep learning model
 
 example command: 
-- python test.py --image_path=dataset/test/image_05166.jpg --weight_path=weights/model_best.pth --use_gpu=False
+- python test.py --image_path=dataset/valid/2/image_05094.jpg --weight_path=weights/model_best.pth --use_gpu=False
 - output result: 
 
 Flower category: hard-leaved pocket orchid
