@@ -39,7 +39,15 @@ example command:
 
 example command: 
 - python test.py --image_path=dataset/test/image_05166.jpg --weight_path=weights/model_best.pth --use_gpu=False
-- output: tensor([[9.9872e-01, 4.8233e-04, 2.6316e-04, 1.7123e-04, 1.2501e-04]])
+- output result: 
+
+Flower category: hard-leaved pocket orchid
+Prediction
+Class: hard-leaved pocket orchid , confidence: 99.997%
+Class: wild pansy , confidence: 0.001%
+Class: moon orchid , confidence: 0.001%
+Class: japanese anemone , confidence: 0.000%
+Class: lotus lotus , confidence: 0.000%
 
 
 ## Reference:
