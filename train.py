@@ -31,7 +31,6 @@ if __name__ == "__main__":
     parser.add_argument('-tr','--train_resized',type=int, help='train resized', default=224)
     parser.add_argument('-vr','--valid_resized',type=int, help='valid resized', default=224)
     parser.add_argument('-ro','--train_rotate',type=int, help='train rotate', default=30)
-    parser.add_argument('-dir','--directory', type=bool, help='dorectory between local(True) or kaggle(False)', required=True)
     args = parser.parse_args()
 
     LR = args.lrate
@@ -43,11 +42,9 @@ if __name__ == "__main__":
     TR = args.train_resized
     VR = args.valid_resized
     RO = args.train_rotate
-    DIR = args.directory
-    if DIR:
-        base_dir = Path('.')
-    else:
-        base_dir = Path('../input/pytorch-challange-flower-dataset')
+  
+    base_dir = Path('.')
+    # base_dir = Path('../input/pytorch-challange-flower-dataset')
 
     resnet = torchvision.models.resnet34(pretrained=True)
     # print(resnet) 

@@ -48,10 +48,10 @@ def getsteplr(base_lr=0.001, max_lr=0.1, step=4):
     step_lr = np.arange(lr, hlr+step, step).tolist()
     return step_lr
 
-def save_checkpoint(state, is_best, filename='checkpoint.pth'):
+def save_checkpoint(state, is_best, filename='weights/checkpoint.pth'):
     torch.save(state, filename)
     if is_best:
-        shutil.copyfile(filename, 'model_best.pth')
+        shutil.copyfile(filename, 'weights/model_best.pth')
 
 def adjust_learning_rate(optimizer, epoch, decay, lrate):
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
