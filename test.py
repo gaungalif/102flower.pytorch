@@ -22,7 +22,10 @@ def predictors(image_path='dataset/valid/2/image_05094.jpg', weight_path='weight
   checkpoint = load_checkpoint(base_dir.joinpath('weights/checkpoint.pth'), device, download=download)
   prob, classes = predict(images, model)
   flower = Path(image_path)
-  print('Flower category: {}'.format(flower_name(flower.parent.name)))
+
+  if (flower.parent.parent.name == 'valid' or 'train'):
+    print('Flower category: {}'.format(flower_name(flower.parent.name)))
+
   class_idx, class_name = getFlowerClassIndex(classes, checkpoint['class_to_idx'])
   output = prob.cpu().detach().numpy()
   a = output.argsort()
