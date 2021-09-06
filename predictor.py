@@ -26,8 +26,9 @@ curr_dir = Path(curr_dir)
 root = curr_dir.joinpath('102flower.pytorch/weights')
 # device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-def load_flower_network(filename, device):
-    utils.download_url('https://drive.google.com/file/d/1c6Dz5QVESdPPAvW0NUWuSnToVkT9fQ3Q/view?usp=sharing', root=root, filename=root.joinpath(filename))
+def load_flower_network(filename, device, download):
+    if download:
+        utils.download_url('https://drive.google.com/file/d/1c6Dz5QVESdPPAvW0NUWuSnToVkT9fQ3Q/view?usp=sharing', root=root, filename=root.joinpath(filename))
     if os.path.isfile(filename): 
         checkpoint = torch.load(filename, map_location=device)
         resnet = torchvision.models.resnet34(pretrained=True)
@@ -39,8 +40,9 @@ def load_flower_network(filename, device):
         return None
     
 
-def load_checkpoint(filename, device):
-    utils.download_url('https://drive.google.com/file/d/16doe5f4YTLlGpFR9_0WQtjAvsPMlwxxJ/view?usp=sharing', root=root, filename=root.joinpath(filename))
+def load_checkpoint(filename, device, download):
+    if download:
+        utils.download_url('https://drive.google.com/file/d/16doe5f4YTLlGpFR9_0WQtjAvsPMlwxxJ/view?usp=sharing', root=root, filename=root.joinpath(filename))
     if os.path.isfile(filename): 
         checkpoint = torch.load(filename, map_location=device)
         return checkpoint
