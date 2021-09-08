@@ -27,9 +27,9 @@ i have also save the package-list.txt into the repository.
 - Use this command 'python train.py --help' for help
 
 example command: 
-'''
+```
 python train.py  --lrate 0.05 --epoch 100 --lfreq 20 --bsize 128 --num_worker 64 
-'''
+```
 
 ### Test:
 - Use 'test.py' to test the model that you have trained.
@@ -39,11 +39,11 @@ python train.py  --lrate 0.05 --epoch 100 --lfreq 20 --bsize 128 --num_worker 64
 - the program will predict the class (or classes) of an image using a trained deep learning model
 
 example command: 
-'''
+```
 python test.py --image_path=dataset/valid/2/image_05094.jpg --weight_path=weights/model_best.pth --use_gpu=False
-'''
+```
 - output result: 
-
+```
 Flower category: hard-leaved pocket orchid
 
 Prediction
@@ -57,7 +57,7 @@ Class: moon orchid , confidence: 0.001%
 Class: japanese anemone , confidence: 0.000%
 
 Class: lotus lotus , confidence: 0.000%
-
+```
 
 ## Reference:
 - Oxford 102 Flower Dataset, https://www.robots.ox.ac.uk/~vgg/data/flowers/102/
